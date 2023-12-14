@@ -1,0 +1,194 @@
+Q-1
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class Frame {
+
+	public static void main(String[] args) throws InterruptedException {
+			// To launching Browser driver
+			 WebDriverManager.chromedriver().setup();
+			 WebDriver driver=new ChromeDriver();
+			 driver.get("https://the-internet.herokuapp.com/iframe");
+			 Thread.sleep(2000);
+			// To maximize window
+			driver.manage().window().maximize();
+			//To delete all cookies
+			driver.manage().deleteAllCookies();
+			 //locate an element id to entered into a frame
+			 WebElement iframeelement=driver.findElement(By.id("mce_0_ifr"));
+			 driver.switchTo().frame(iframeelement);
+			 Thread.sleep(2000);
+			 //To Locate an element and write text
+			 WebElement ptag=driver.findElement(By.xpath("//body/p"));
+			 ptag.clear();
+			 Thread.sleep(2000);
+			 ptag.sendKeys("Hello People"); 
+			 Thread.sleep(5000);
+			 // To close the Browser
+		     	driver.close();
+	}
+
+}
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Q-2
+
+import java.util.Set;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class WindowHandle {
+
+	public static void main(String[] args) throws InterruptedException {
+		// To launching Browser driver
+		 WebDriverManager.chromedriver().setup();
+		 WebDriver driver=new ChromeDriver();
+		 driver.get("https://the-internet.herokuapp.com/windows");
+		 Thread.sleep(2000);
+		// To maximize window
+		driver.manage().window().maximize();
+		//To delete all cookies
+		driver.manage().deleteAllCookies();
+		
+		// To click on click Here button
+		  WebElement clickbtnelement=driver.findElement(By.linkText("Click Here"));
+		  clickbtnelement.click();
+		  Thread.sleep(2000);
+		  // To open a new window
+		  String parentHandle=driver.getWindowHandle();	
+		  Set<String> allhandle=driver.getWindowHandles();//unique window
+		  Thread.sleep(2000);
+		  // To switch to open new window
+		  for(String h1:allhandle) {	  
+			  driver.switchTo().window(h1);
+		  }
+		//To verify the new Window text present in the page
+			  WebElement newwindowh3element=driver.findElement(By.tagName("h3"));
+			  String expectedresult="New Window";
+			  String actualresult=newwindowh3element.getText();
+		   
+			  if(actualresult.equals(expectedresult)) {
+				  System.out.println("New Window is Present on Page");
+			  }else {
+				  System.out.println("New Window is Not Present on Page");
+			  }
+		 
+		  driver.close();	
+		  Thread.sleep(2000);
+		  // To switch to original window
+		  driver.switchTo().window(parentHandle);
+		  //To verify the old Window is active
+		  WebElement originalwindowh3element=driver.findElement(By.tagName("h3"));
+		  String Expecttext="Opening a new window";
+		  String actualtext=originalwindowh3element.getText();
+	   
+		  if(actualtext.equals(Expecttext)) {
+			  System.out.println("Original Window is active");
+		  }else {
+			  System.out.println("Original Window is Not active");
+		  }
+		  // To close the Browser
+		  driver.quit();
+		  
+	}
+
+}
+
+Output = 
+
+New Window is Present on Page
+Original Window is active
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Q-3.
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class Nestedframe {
+
+	public static void main(String[] args) throws InterruptedException {
+		// To launching Browser driver
+		WebDriverManager.chromedriver().setup();
+		WebDriver driver=new ChromeDriver();
+		driver.get("http://the-internet.herokuapp.com/nested_frames");
+		// To maximize window
+		driver.manage().window().maximize();
+		//To delete all cookies
+		driver.manage().deleteAllCookies();
+		//To switch to topframe	
+		driver.switchTo().frame("frame-top");
+		Thread.sleep(2000);
+		
+		//To switch to Leftframe	
+		driver.switchTo().frame("frame-left");
+		String left =driver.findElement(By.tagName("body")).getText();
+		System.out.println(left+" Frame landed");
+		Thread.sleep(1000);
+		//To switch back to top frame
+		driver.switchTo().defaultContent();
+		driver.switchTo().frame("frame-top");
+		Thread.sleep(1000);
+		//To switch to Middleframe	
+		driver.switchTo().frame("frame-middle");
+		String middle=driver.findElement(By.xpath("//div[text()='MIDDLE']")).getText();
+		System.out.println(middle+" Frame landed");
+		Thread.sleep(1000);
+		//To switch back to top frame
+		driver.switchTo().defaultContent();
+		driver.switchTo().frame("frame-top");
+		//To switch to rightframe
+		driver.switchTo().frame("frame-right");
+		String right=driver.findElement(By.tagName("body")).getText();
+		System.out.println(right+" Frame landed");
+		Thread.sleep(1000);
+		//To switch back to top frame
+		driver.switchTo().defaultContent();
+		driver.switchTo().frame("frame-top");
+		driver.switchTo().defaultContent();
+		//To switch to Bottomframe
+		driver.switchTo().frame("frame-bottom");
+		String bottom=driver.findElement(By.tagName("body")).getText();
+		System.out.println(bottom+" Frame landed");
+		Thread.sleep(1000);
+		//To switch back to top frame
+		driver.switchTo().defaultContent();
+		driver.switchTo().frame("frame-top");
+		driver.switchTo().defaultContent();
+		//To verify title of the page
+		String Title=driver.getTitle();
+		if(Title.equals("Frames")) {
+			System.out.println("Title of page is Frames");
+		}else {
+			System.out.println("Title of page is Not Frames");
+			
+		}
+		//To close the Browser
+		driver.close();
+		
+
+	}
+
+}
+
+Output = 
+
+LEFT Frame landed
+MIDDLE Frame landed
+RIGHT Frame landed
+BOTTOM Frame landed
+Title of page is Not Frames
+
+
